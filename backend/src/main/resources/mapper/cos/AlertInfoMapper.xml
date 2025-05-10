@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.AlertInfoMapper">
+
+    <!-- 分页获取报警信息 -->
+    <select id="queryAlertPage" resultType="java.util.LinkedHashMap">
+        select
+        ai.id,
+        ai.user_id,
+        ai.address,
+        ai.longitude,
+        ai.latitude,
+        ai.create_date,
+        ai.status,
+        ui.name as userName,
+        ui.code as userCode,
+        ui.images as userImages
+        from
+        alert_info ai
+        left join user_info ui on (ai.user_id = ui.id)
+        where 1 = 1
+        <if test="alertInfo.userName != null and alertInfo.userName != ''">
+            AND ui.name LIKE CONCAT('%',#{alertInfo.userName},'%')
+        </if>
+        order by ai.create_date desc
+    </select>
+</mapper>

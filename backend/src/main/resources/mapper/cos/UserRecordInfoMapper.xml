@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.UserRecordInfoMapper">
+
+    <!-- 分页获取用户访问历史 -->
+    <select id="selectRecordPage" resultType="java.util.LinkedHashMap">
+        select user_record_info.id,
+        user_record_info.user_id,
+        user_record_info.post_id,
+        user_record_info.create_date,
+
+        user_info.code,
+        user_info.name,
+        user_info.birthday,
+        user_info.sex,
+        user_info.area,
+        user_info.profession,
+        user_info.images,
+
+        post_info.title,
+        post_info.content,
+        post_info.images
+        from user_record_info
+        left join post_info on
+        (post_info.id = user_record_info.post_id)
+        left join user_info on
+        (user_info.id = user_record_info.user_id)
+        where 1 = 1
+        <if test="userRecordInfo.name != null and userRecordInfo.name != ''">
+            AND user_info.name LIKE CONCAT('%',#{userRecordInfo.name},'%')
+        </if>
+        <if test="userRecordInfo.code != null and userRecordInfo.code != ''">
+            AND user_info.code LIKE CONCAT('%',#{userRecordInfo.code},'%')
+        </if>
+        <if test="userRecordInfo.title != null and userRecordInfo.title != ''">
+            AND post_info.title LIKE CONCAT('%',#{userRecordInfo.title},'%')
+        </if>
+        order by user_record_info.create_date desc
+    </select>
+
+    <!-- 根据用户ID获取历史访问记录 -->
+    <select id="queryHistoryByUserId" resultType="java.util.LinkedHashMap">
+        select user_record_info.id,
+               user_record_info.user_id,
+               user_record_info.post_id,
+               user_record_info.create_date,
+               user_info.code,
+               user_info.name,
+               user_info.birthday,
+               user_info.sex,
+               user_info.area,
+               user_info.profession,
+               user_info.images,
+               post_info.title,
+               post_info.content,
+               post_info.images
+        from user_record_info
+                 left join post_info on
+            (post_info.id = user_record_info.post_id)
+                 left join user_info on
+            (user_info.id = user_record_info.user_id)
+        where 1 = 1
+          AND user_record_info.user_id = #{userId}
+        order by user_record_info.create_date desc
+    </select>
+</mapper>

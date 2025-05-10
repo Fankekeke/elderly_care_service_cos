@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.ChatRecordInfoMapper">
+
+    <!-- 分页获取聊天记录 -->
+    <select id="selectChatRecordPage" resultType="java.util.LinkedHashMap">
+        SELECT
+        mi.id,
+        mi.send_user AS sendUser,
+        mi.take_user AS takeUser,
+        mi.content,
+        mi.create_date AS createDate,
+        ui1.name AS sendUserName,
+        ui1.images AS sendUserAvatar,
+        ui2.name AS takeUserName,
+        ui2.images AS takeUserAvatar
+        FROM
+        chat_record_info mi
+        LEFT JOIN user_info ui1 ON ( ui1.id = mi.send_user )
+        LEFT JOIN user_info ui2 ON ( ui2.id = mi.take_user )
+        WHERE
+        1 = 1
+        <if test="chatRecordInfo.sendUserName != null and chatRecordInfo.sendUserName != ''">
+            AND ui1.name LIKE CONCAT('%',#{chatRecordInfo.sendUserName},'%')
+        </if>
+        <if test="chatRecordInfo.takeUserName != null and chatRecordInfo.takeUserName != ''">
+            AND ui2.name LIKE CONCAT('%',#{chatRecordInfo.takeUserName},'%')
+        </if>
+        ORDER BY
+        mi.create_date DESC
+    </select>
+
+    <!-- 查询消息信息 -->
+    <select id="messageListById" resultType="java.util.LinkedHashMap">
+        SELECT mi.send_user   AS sendUser,
+               mi.take_user   AS takeUser,
+               mi.content,
+               mi.create_date AS createDate,
+               ui1.name       AS sendUserName,
+               ui1.images     AS sendUserAvatar,
+               ui2.name       AS takeUserName,
+               ui2.images     AS takeUserAvatar
+        FROM (SELECT *
+              FROM chat_record_info
+              WHERE create_date IN (SELECT MAX(create_date)
+                                    FROM chat_record_info
+                                    WHERE take_user = #{ userId }
+                                       OR send_user = #{ userId }
+                                    GROUP BY CONCAT(
+                                                     IF
+                                                         (send_user &gt; take_user, send_user, take_user),
+                                                     IF
+                                                         (send_user &lt; take_user, send_user, take_user)))
+              ORDER BY create_date DESC) mi
+                 LEFT JOIN user_info ui1 ON (ui1.id = mi.send_user)
+                 LEFT JOIN user_info ui2 ON (ui2.id = mi.take_user)
+        ORDER BY mi.create_date DESC
+    </select>
+
+    <!-- 查找聊天记录 -->
+    <select id="getMessageDetail" resultType="java.util.LinkedHashMap">
+        SELECT
+            mi.task_status AS takeStatus,
+            mi.send_user AS sendUser,
+            mi.take_user AS takeUser,
+            mi.content,
+            mi.create_date AS createDate,
+            ui1.name AS sendUserName,
+            ui1.images AS sendUserAvatar,
+            ui2.name AS takeUserName,
+            ui2.images AS takeUserAvatar
+        FROM
+            ( SELECT * FROM chat_record_info WHERE send_user = #{ sendUser } AND take_user = #{ takeUser } UNION SELECT * FROM chat_record_info WHERE send_user = #{ takeUser } AND take_user = #{ sendUser } ) mi
+                LEFT JOIN user_info ui1 ON ( ui1.id = mi.send_user )
+                LEFT JOIN user_info ui2 ON (
+                ui2.id = mi.take_user
+                )
+        ORDER BY mi.create_date ASC
+    </select>
+
+</mapper>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.ServiceReserveInfoMapper">
+
+    <!-- 分页获取服务预约信息 -->
+    <select id="querySerciceReservePage" resultType="java.util.LinkedHashMap">
+        select
+        sri.id,
+        sri.code,
+        sri.user_id,
+        sri.`type`,
+        sri.content,
+        sri.total_price,
+        sri.address,
+        sri.images,
+        sri.longitude,
+        sri.latitude,
+        sri.status,
+        sri.work_user_id,
+        sri.create_date,
+        ui1.name as userName,
+        ui1.code as userCode,
+        ui1.images as userImages,
+        ui2.name as workName,
+        ui2.images as workImages
+        from
+        service_reserve_info sri
+        left join user_info ui1 on
+        (ui1.id = sri.user_id)
+        left join user_info ui2 on
+        (ui2.id = sri.work_user_id)
+        where
+        1 = 1
+        <if test="serviceReserveInfo.userName != null and serviceReserveInfo.userName != ''">
+            AND ui1.name LIKE CONCAT('%',#{serviceReserveInfo.userName},'%')
+        </if>
+        <if test="serviceReserveInfo.workName != null and serviceReserveInfo.workName != ''">
+            AND ui2.name LIKE CONCAT('%',#{serviceReserveInfo.workName},'%')
+        </if>
+        <if test="serviceReserveInfo.type != null">
+            AND sri.`type` = #{serviceReserveInfo.type}
+        </if>
+        order by
+        sri.create_date desc
+    </select>
+
+    <!-- 获取服务预约详情 -->
+    <select id="getDetail" resultType="java.util.LinkedHashMap">
+        select
+        sri.id,
+        sri.code,
+        sri.user_id,
+        sri.`type`,
+        sri.content,
+        sri.total_price,
+        sri.address,
+        sri.images,
+        sri.longitude,
+        sri.latitude,
+        sri.status,
+        sri.work_user_id,
+        sri.create_date,
+        ui1.name as userName,
+        ui1.code as userCode,
+        ui1.images as userImages,
+        ui2.name as workName,
+        ui2.images as workImages
+        from
+        service_reserve_info sri
+        left join user_info ui1 on
+        (ui1.id = sri.user_id)
+        left join user_info ui2 on
+        (ui2.id = sri.work_user_id)
+        where
+        1 = 1
+        <if test="id != null">
+            AND sri.`id` = #{id}
+        </if>
+    </select>
+
+    <!-- 分页获取服务预约信息 -->
+    <select id="queryOwnerServicePage" resultType="java.util.LinkedHashMap">
+        select
+        sri.id,
+        sri.code,
+        sri.user_id,
+        sri.`type`,
+        sri.content,
+        sri.total_price,
+        sri.address,
+        sri.images,
+        sri.longitude,
+        sri.latitude,
+        sri.status,
+        sri.work_user_id,
+        sri.create_date,
+        ui1.name as userName,
+        ui1.images as userImages,
+        ui2.name as workName,
+        ui2.images as workImages
+        from
+        service_reserve_info sri
+        left join user_info ui1 on
+        (ui1.id = sri.user_id)
+        left join user_info ui2 on
+        (ui2.id = sri.work_user_id)
+        where
+        1 = 1
+        <if test="serviceReserveInfo.userName != null and serviceReserveInfo.userName != ''">
+            AND ui1.name LIKE CONCAT('%',#{serviceReserveInfo.userName},'%')
+        </if>
+        <if test="serviceReserveInfo.workName != null and serviceReserveInfo.workName != ''">
+            AND ui2.name LIKE CONCAT('%',#{serviceReserveInfo.workName},'%')
+        </if>
+        <if test="serviceReserveInfo.type != null">
+            AND sri.`type` = #{serviceReserveInfo.type}
+        </if>
+        <if test="serviceReserveInfo.userId != null">
+            AND ui1.`user_id` = #{serviceReserveInfo.userId}
+        </if>
+        order by
+        sri.create_date desc
+    </select>
+
+    <!-- 分页获取服务预约信息 -->
+    <select id="queryWorkerServicePage" resultType="java.util.LinkedHashMap">
+        select
+        sri.id,
+        sri.code,
+        sri.user_id,
+        sri.`type`,
+        sri.content,
+        sri.total_price,
+        sri.address,
+        sri.images,
+        sri.longitude,
+        sri.latitude,
+        sri.status,
+        sri.work_user_id,
+        sri.create_date,
+        ui1.name as userName,
+        ui1.images as userImages,
+        ui2.name as workName,
+        ui2.images as workImages
+        from
+        service_reserve_info sri
+        left join user_info ui1 on
+        (ui1.id = sri.user_id)
+        left join staff_info ui2 on
+        (ui2.id = sri.work_user_id)
+        where
+        1 = 1
+        <if test="serviceReserveInfo.userName != null and serviceReserveInfo.userName != ''">
+            AND ui1.name LIKE CONCAT('%',#{serviceReserveInfo.userName},'%')
+        </if>
+        <if test="serviceReserveInfo.workName != null and serviceReserveInfo.workName != ''">
+            AND ui2.name LIKE CONCAT('%',#{serviceReserveInfo.workName},'%')
+        </if>
+        <if test="serviceReserveInfo.type != null">
+            AND sri.`type` = #{serviceReserveInfo.type}
+        </if>
+        <if test="serviceReserveInfo.workUserId != null">
+            AND ui2.`user_id` = #{serviceReserveInfo.workUserId}
+        </if>
+        order by
+        sri.create_date desc
+    </select>
+
+    <!-- 获取未接单的订单 -->
+    <select id="queryNotCheckOrder" resultType="java.util.LinkedHashMap">
+        select
+        sri.id,
+        sri.code,
+        sri.user_id,
+        sri.`type`,
+        sri.content,
+        sri.total_price,
+        sri.address,
+        sri.images,
+        sri.longitude,
+        sri.latitude,
+        sri.status,
+        sri.work_user_id,
+        sri.create_date,
+        ui1.name as userName,
+        ui1.images as userImages,
+        ui2.name as workName,
+        ui2.images as workImages
+        from
+        service_reserve_info sri
+        left join user_info ui1 on
+        (ui1.id = sri.user_id)
+        left join staff_info ui2 on
+        (ui2.id = sri.work_user_id)
+        where
+        1 = 1
+        <if test="key != null and key != ''">
+            AND sri.content LIKE CONCAT('%',#{key},'%')
+        </if>
+        AND sri.`status` = 1
+        AND ui1.`user_id` != #{userId}
+        order by
+        sri.create_date desc
+    </select>
+</mapper>

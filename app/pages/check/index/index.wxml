@@ -1,0 +1,31 @@
+<!--状态栏区域-->
+<view class="cu-custom" style="0px;">
+    <view class="cu-bar fixed none-bg text-white bg-img" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+        <view class="head-title canui-head-title"></view>
+    </view>
+</view>
+
+<view class="cu-bar bg-white solid-bottom margin-top">
+    <view class='action'>
+        <text class='icon-title text-orange'></text> 健康课程
+    </view>
+</view>
+<view class="cu-list menu menu-avatar">
+    <view style="padding: 20px;display: block" wx:if="{{orderList.length == 0}}">
+        <view class="flex-sub text-center">
+            <view class="solid-bottom text-xl padding">
+                <text class="text-black">暂无信息</text>
+            </view>
+        </view>
+    </view>
+    <view class="cu-item " wx:for="{{orderList}}" bindtap='postDetail' data-postId='{{ item.id }}'>
+        <!-- <view class="cu-avatar radius lg" style="background-image:url(http://127.0.0.1:9527/imagesWeb/{{ item.image }});"></view> -->
+        <view class='content'>
+            <view class="text-titile">{{ item.name }}</view>
+            <view class='text-gray text-sm'>{{ item.content }}</view>
+        </view>
+        <view class='action'>
+            <view class='text-grey text-xs'>访问量{{ item.visitNum }}</view>
+        </view>
+    </view>
+</view>

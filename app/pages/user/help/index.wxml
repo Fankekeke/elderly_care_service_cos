@@ -1,0 +1,62 @@
+<!-- 状态栏区域 -->
+<view class="cu-custom" style="height:{{CustomBar}}px;">
+    <view class="cu-bar fixed none-bg text-white bg-img" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+        <navigator class='action canui-head-title' open-type="navigateBack" hover-class="none">
+            <text class='icon-back'></text>
+            服务记录
+        </navigator>
+    </view>
+</view>
+<view class="box" style="top: {{CustomBar}}px;">
+    <view class="canui-card-order margin-top">
+        <view class="canui-order-item bg-white" wx:for="{{ orderList }}">
+            <view class="head-title-box">
+                <view class="cu-tag sm bg-red" style="font-size: 12px" wx:if="{{item.status == 1}}">未接单</view>
+                <view class="cu-tag sm bg-blue" style="font-size: 12px" wx:if="{{item.status == 2}}">已接单</view>
+                <view class="cu-tag sm bg-green" style="font-size: 12px" wx:if="{{item.status == 3}}">已完成</view>
+            </view>
+            <view>
+                <view class="cu-list menu menu-avatar">
+                    <view class="cu-item">
+                        <view class="cu-avatar radius lg" style="background-image:url(http://127.0.0.1:9527/imagesWeb/{{ item.image }});"></view>
+                        <view class='content canui-xzwz tow' style="padding-left: 15px">
+                            <text wx:if="{{ item.type == 1 }}">房间清洁</text>
+                            <text wx:if="{{ item.type == 2 }}">代取物品</text>
+                            <text wx:if="{{ item.type == 3 }}">水电维修</text>
+                            <view style="font-size: 12px">位置:{{ item.address }}</view>
+                        </view>
+                        <view class='action' style="padding-left: 15px;">
+                            <view class="text-xs text-right text-gray" style="font-size: 12px">
+                                <text>{{ item.totalPrice }}元</text>
+                            </view>
+                            <view class="text-xs text-right text-gray" style="font-size: 11px">
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view>
+                <text class="text-right text-red canui-text-left" style="font-size: 12px">
+                    {{ item.content != null ? item.content : '- -' }}
+                </text>
+            </view>
+            <view class="order-price-box" style="margin-top: 20px">
+                <text style="font-size: 12px">{{ item.days }}创建</text>
+            </view>
+            <view class="flex justify-end order-btn-box" style="margin-top: 5px">
+                <view class='margin-tb-sm text-center' wx:if="{{ item.status == 1 }}">
+                    <button class='cu-btn round line-red shadow' bindtap="remove" data-index="{{item.id}}">
+                        取消
+                    </button>
+                </view>
+            </view>
+        </view>
+        <view wx:if="{{ orderList.length === 0 }}">
+            <van-empty style="height: 400px;margin: 0 auto" description="无信息" />
+        </view>
+    </view>
+</view>
+
+<view class="canui-foor-fixed {{TabbarBot=='y'?'canui-tabbar-bottom':''}}">
+    <button class="cu-btn canui-color-gradual shadow-blur round lg" bindtap='add'><text class="icon-add"></text> 添加服务预约</button>
+</view>

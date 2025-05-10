@@ -1,0 +1,13 @@
+{
+  "usingComponents": {
+    "van-button": "../../../dist/button/index",
+    "van-popup": "../../../dist/popup/index",
+    "van-cell": "../../../dist/cell/index",
+    "van-cell-group": "../../../dist/cell-group/index",
+    "van-rate": "../../../dist/rate/index",
+    "van-field": "../../../dist/field/index",
+    "van-datetime-picker": "../../../dist/datetime-picker/index",
+  "van-calendar": "../../../dist/calendar/index",
+  "van-picker": "../../../dist/picker/index"
+  }
+}

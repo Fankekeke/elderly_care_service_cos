@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.CourseInfoMapper">
+
+    <!-- 分页查询课程信息 -->
+    <select id="queryCoursePage" resultType="java.util.LinkedHashMap">
+        select
+        id,
+        code,
+        name,
+        visit_num,
+        create_date,
+        content,
+        file_url
+        from
+        course_info
+        where 1 = 1
+        <if test="courseInfo.code != null and courseInfo.code != ''">
+            AND code LIKE CONCAT('%',#{courseInfo.code},'%')
+        </if>
+        <if test="courseInfo.name != null and courseInfo.name != ''">
+            AND name LIKE CONCAT('%',#{courseInfo.name},'%')
+        </if>
+        order by create_date desc
+    </select>
+</mapper>

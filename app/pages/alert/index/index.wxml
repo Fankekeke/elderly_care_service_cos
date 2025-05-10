@@ -1,0 +1,19 @@
+<!--状态栏区域-->
+<view class="cu-custom" style="0px;">
+    <view class="cu-bar fixed none-bg text-white bg-img" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+        <view class="head-title canui-head-title"></view>
+    </view>
+</view>
+
+<view class="cu-bar bg-white solid-bottom margin-top">
+    <view class='action'>
+        <text class='icon-title text-orange'></text> 报警
+    </view>
+</view>
+
+<view style="padding: 20px">
+    <image class="widget__arrow" src="../../../img/check.png" mode="aspectFill"></image>
+    <van-button color="#9445df" round type="primary" block style="display: block;margin-top: 35px;height: 70px" bindtap="submit">
+            提交报警
+        </van-button>
+</view>

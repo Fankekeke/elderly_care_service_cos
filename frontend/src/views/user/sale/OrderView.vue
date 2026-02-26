@@ -86,9 +86,6 @@
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
         <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">预约人信息</span></a-col>
-        <a-col :span="8"><b>用户编号：</b>
-          {{ orderData.userCode }}
-        </a-col>
         <a-col :span="8"><b>用户姓名：</b>
           {{ orderData.userName }}
         </a-col>

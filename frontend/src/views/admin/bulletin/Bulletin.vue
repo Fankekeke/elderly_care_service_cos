@@ -131,12 +131,12 @@ export default {
         title: '标题',
         dataIndex: 'title',
         scopedSlots: { customRender: 'titleShow' },
-        width: 300
+        width: 200
       }, {
         title: '公告内容',
         dataIndex: 'content',
         scopedSlots: { customRender: 'contentShow' },
-        width: 600
+        width: 500
       }, {
         title: '发布时间',
         dataIndex: 'createDate',
@@ -146,7 +146,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        width: 250
       }, {
         title: '上传人',
         dataIndex: 'uploader',

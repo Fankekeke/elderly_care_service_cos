@@ -3,15 +3,19 @@
     <div class="content">
       <div class="top">
         <div class="header">
-          <a-row style="width: 368px;margin: 0 auto">
+          <a-row class="header-row">
             <a-col :span="24">
-              <div style="text-align: left;font-size: 23px;margin-bottom: 10px;font-family: SimHei;margin-top: 30px;color: black;text-align: center">智慧互助养老服务平台</div>
+              <div class="title">智慧互助养老服务平台</div>
             </a-col>
           </a-row>
         </div>
         <div class="desc"></div>
       </div>
-      <component :is="componentName" @regist="handleRegist" class="main-content" style="margin-top: 50px;"></component>
+      <component
+        :is="componentName"
+        @regist="handleRegist"
+        class="main-content"        style="margin-top: 50px;"
+      />
     </div>
     <global-footer :copyright="copyright" />
   </div>

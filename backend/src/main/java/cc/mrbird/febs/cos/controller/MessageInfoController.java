@@ -54,8 +54,7 @@ public class MessageInfoController {
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {
-        return R.ok(messageInfoService.update(Wrappers.<MessageInfo>lambdaUpdate().set(MessageInfo::getReadStatus, 1)
-                .in(MessageInfo::getId, ids)));
+        return R.ok(messageInfoService.removeByIds(ids));
     }
 
 }

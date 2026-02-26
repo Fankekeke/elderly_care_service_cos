@@ -5,7 +5,7 @@
       <a-form layout="horizontal">
         <a-row :gutter="15">
           <div :class="advanced ? null: 'fold'">
-            <a-col :md="6" :sm="24">
+            <a-col :md="8" :sm="24">
               <a-form-item
                 label="志愿者姓名"
                 :labelCol="{span: 5}"
@@ -13,7 +13,7 @@
                 <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
+            <a-col :md="8" :sm="24">
               <a-form-item
                 label="志愿者编号"
                 :labelCol="{span: 5}"
@@ -182,18 +182,8 @@ export default {
           }
         }
       }, {
-        title: '所属小组',
-        dataIndex: 'deptName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '职位',
-        dataIndex: 'positionName',
+        title: '联系方式',
+        dataIndex: 'phone',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

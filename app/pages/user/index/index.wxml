@@ -56,4 +56,10 @@
             <text class='text-grey'>帮助服务</text>
         </navigator>
     </view>
+    <view class="cu-item arrow">
+        <navigator class='content' open-type="navigate" hover-class='none' url="/pages/shop/chat/index">
+            <text class='icon-message text-cyan'></text>
+            <text class='text-grey'>社区智能客服</text>
+        </navigator>
+    </view>
 </view>

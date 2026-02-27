@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.StaffInfoMapper">
 
-    <!-- 分页获取会员信息 -->
+    <!-- 分页获取志愿者信息 -->
     <select id="selectStaffPage" resultType="java.util.LinkedHashMap">
         select
         si.id,
@@ -44,7 +44,7 @@
         si.create_date desc
     </select>
 
-    <!-- 查询会员信息 -->
+    <!-- 查询志愿者信息 -->
     <select id="selectStaffList" resultType="java.util.LinkedHashMap">
         select
         si.id,
@@ -73,7 +73,7 @@
         si.create_date desc
     </select>
 
-    <!-- 查询会员信息 -->
+    <!-- 查询志愿者信息 -->
     <select id="selectStaffListUser" resultType="java.util.LinkedHashMap">
         select
         si.id,
@@ -103,7 +103,7 @@
         si.create_date desc
     </select>
 
-    <!-- 查询会员信息 -->
+    <!-- 查询志愿者信息 -->
     <select id="selectStaffListByUserIds" resultType="java.util.LinkedHashMap">
         select
         si.id,

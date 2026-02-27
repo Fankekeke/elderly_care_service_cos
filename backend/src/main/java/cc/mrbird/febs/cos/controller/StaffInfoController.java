@@ -1,9 +1,13 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.service.CacheService;
+import cc.mrbird.febs.common.service.RedisService;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.ServiceReserveInfo;
 import cc.mrbird.febs.cos.entity.StaffInfo;
+import cc.mrbird.febs.cos.entity.UserInfo;
+import cc.mrbird.febs.cos.service.IMailService;
 import cc.mrbird.febs.cos.service.IServiceReserveInfoService;
 import cc.mrbird.febs.cos.service.IStaffInfoService;
 import cc.mrbird.febs.system.service.UserService;
@@ -11,8 +15,12 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.Collections;
 import java.util.Date;
@@ -33,16 +41,90 @@ public class StaffInfoController {
 
     private final UserService userService;
 
+    private final CacheService cacheService;
+
+    private final TemplateEngine templateEngine;
+
+    private final IMailService iMailService;
+
+    private final RedisService redisService;
+
     /**
-     * 分页获取会员信息
+     * 验证码验证
      *
-     * @param page          分页对象
-     * @param staffInfo 会员信息
+     * @param validateCode
+     * @return
+     */
+    @SneakyThrows
+    @GetMapping("/verification/check")
+    public R verificationCheck(String validateCode, String email) {
+        //1:获取redis里面的验证码信息
+        String code = redisService.get(email);
+        //2:判断验证码是否正确
+        if (!StringUtils.isEmpty(validateCode)) {
+            validateCode = validateCode.toLowerCase();
+            code = code.toLowerCase();
+            if (validateCode.equals(code)) {
+                // 删除key
+                redisService.del(email);
+                return R.ok(true);
+            }
+        }
+        return R.ok(false);
+    }
+
+    /**
+     * 发送注册邮件
+     *
+     * @param email
+     * @return
+     */
+    @SneakyThrows
+    @GetMapping("/register/email")
+    public R sendRegisterEmail(String email) {
+        // 判断邮箱是否重复
+        int count = staffInfoService.count(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getMail, email));
+        if (count > 0) {
+            return R.ok(false);
+        }
+        // 绘制随机字符
+        String randomString = "";
+        for (int i = 1; i <= 50; i++) {
+            randomString = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
+        }
+
+        Context context = new Context();
+        context.setVariable("today", DateUtil.formatDate(new Date()));
+        context.setVariable("verifyCode", randomString);
+        String emailContent = templateEngine.process("registerEmail", context);
+        iMailService.sendHtmlMail(email, "账户验证", emailContent);
+        // 将随机生成的验证码放入Redis中
+        redisService.set(email, randomString);
+        return R.ok(true);
+    }
+
+    /**
+     * 分页获取志愿者信息
+     *
+     * @param page      分页对象
+     * @param staffInfo 志愿者信息
      * @return 结果
      */
     @GetMapping("/page")
     public R page(Page<StaffInfo> page, StaffInfo staffInfo) {
         return R.ok(staffInfoService.selectStaffPage(page, staffInfo));
+    }
+
+    /**
+     * 审核志愿者信息
+     *
+     * @param staffId 志愿者ID
+     * @param status  审核状态
+     * @return 结果
+     */
+    @PutMapping("/auditStaff")
+    public R auditStaff(Integer staffId, Integer status) {
+        return R.ok(staffInfoService.update(Wrappers.<StaffInfo>lambdaUpdate().set(StaffInfo::getStatus, status).eq(StaffInfo::getId, staffId)));
     }
 
     /**
@@ -57,9 +139,9 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取会员列表
+     * 获取志愿者列表
      *
-     * @param enterpriseId 会员ID
+     * @param enterpriseId 志愿者ID
      * @return 结果
      */
     @GetMapping("/queryStaffList")
@@ -68,9 +150,9 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取会员列表
+     * 获取志愿者列表
      *
-     * @param staffId 会员ID
+     * @param staffId 志愿者ID
      * @return 结果
      */
     @GetMapping("/queryStaffList/staff")
@@ -80,7 +162,7 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取会员信息
+     * 获取志愿者信息
      *
      * @return 结果
      */
@@ -90,7 +172,7 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取会员信息
+     * 获取志愿者信息
      *
      * @return 结果
      */
@@ -100,7 +182,7 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取会员详细信息
+     * 获取志愿者详细信息
      *
      * @param id ID
      * @return 结果
@@ -122,9 +204,9 @@ public class StaffInfoController {
     }
 
     /**
-     * 新增会员信息
+     * 新增志愿者信息
      *
-     * @param staffInfo 会员信息
+     * @param staffInfo 志愿者信息
      * @return 结果
      */
     @PostMapping
@@ -137,9 +219,9 @@ public class StaffInfoController {
     }
 
     /**
-     * 修改会员信息
+     * 修改志愿者信息
      *
-     * @param staffInfo 会员信息
+     * @param staffInfo 志愿者信息
      * @return 结果
      */
     @PutMapping
@@ -148,7 +230,7 @@ public class StaffInfoController {
     }
 
     /**
-     * 删除会员信息
+     * 删除志愿者信息
      *
      * @param ids 主键IDS
      * @return 结果

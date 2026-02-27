@@ -28,10 +28,10 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
     private final IBulletinInfoService bulletinInfoService;
 
     /**
-     * 分页获取会员信息
+     * 分页获取志愿者信息
      *
      * @param page          分页对象
-     * @param staffInfo 会员信息
+     * @param staffInfo 志愿者信息
      * @return 结果
      */
     @Override
@@ -67,9 +67,9 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
     }
 
     /**
-     * 查询会员信息
+     * 查询志愿者信息
      *
-     * @param enterpriseId 会员id
+     * @param enterpriseId 志愿者id
      * @return 结果
      */
     @Override
@@ -78,9 +78,9 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
     }
 
     /**
-     * 获取会员列表
+     * 获取志愿者列表
      *
-     * @param enterpriseId 会员ID
+     * @param enterpriseId 志愿者ID
      * @return 结果
      */
     @Override
@@ -89,14 +89,14 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
     }
 
     /**
-     * 根据用户id查询会员信息
+     * 根据用户id查询志愿者信息
      *
      * @param userId 用户id
      * @return 结果
      */
     @Override
     public LinkedHashMap<String, Object> queryStaffByUserId(Integer userId) {
-        // 获取会员信息
+        // 获取志愿者信息
         StaffInfo staffInfo = staffInfoService.selectOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, userId));
 //        if (staffInfo.getMemberLevel() != null) {
 //            LevelRuleInfo levelRuleInfo = levelRuleInfoService.getById(staffInfo.getMemberLevel());
@@ -112,7 +112,7 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
     }
 
     /**
-     * 查询会员信息
+     * 查询志愿者信息
      *
      * @param ids ids
      * @return 结果

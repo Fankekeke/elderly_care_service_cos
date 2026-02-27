@@ -5,11 +5,9 @@ import cc.mrbird.febs.cos.entity.ServiceReserveInfo;
 import cc.mrbird.febs.cos.dao.ServiceReserveInfoMapper;
 import cc.mrbird.febs.cos.entity.StaffInfo;
 import cc.mrbird.febs.cos.entity.UserInfo;
-import cc.mrbird.febs.cos.service.IMessageInfoService;
-import cc.mrbird.febs.cos.service.IServiceReserveInfoService;
-import cc.mrbird.febs.cos.service.IStaffInfoService;
-import cc.mrbird.febs.cos.service.IUserInfoService;
+import cc.mrbird.febs.cos.service.*;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -17,6 +15,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -34,6 +34,10 @@ public class ServiceReserveInfoServiceImpl extends ServiceImpl<ServiceReserveInf
     private final IMessageInfoService messageInfoService;
 
     private final IStaffInfoService staffInfoService;
+
+    private final TemplateEngine templateEngine;
+
+    private final IMailService iMailService;
 
     /**
      * 分页获取服务预约信息
@@ -112,9 +116,17 @@ public class ServiceReserveInfoServiceImpl extends ServiceImpl<ServiceReserveInf
         serviceReserveInfo.setStatus("2");
 
         // 添加用户消息通知
-        String message = "您发布的服务订单“"+serviceReserveInfo.getCode()+"” 已被接单，请等待作业人员联系。";
+        String message = "您发布的服务订单“" + serviceReserveInfo.getCode() + "” 已被接单，请等待作业人员联系。";
         MessageInfo messageInfo = new MessageInfo(Long.getLong(user.getUserId().toString()), message, DateUtil.formatDateTime(new Date()), 0);
         messageInfoService.save(messageInfo);
+
+        if (StrUtil.isNotEmpty(user.getEmail())) {
+            Context context = new Context();
+            context.setVariable("today", DateUtil.formatDate(new Date()));
+            context.setVariable("verifyCode", "您发布的服务订单“" + serviceReserveInfo.getCode() + "” 已被接单，请等待作业人员联系。");
+            String emailContent = templateEngine.process("registerEmail", context);
+            iMailService.sendHtmlMail(user.getEmail(), "服务订单", emailContent);
+        }
 
         return this.updateById(serviceReserveInfo);
     }

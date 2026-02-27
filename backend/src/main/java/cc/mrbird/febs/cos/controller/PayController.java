@@ -38,7 +38,7 @@ public class PayController {
     }
 
 //    /**
-//     * 购买会员
+//     * 购买志愿者
 //     * @param subject
 //     * @param body
 //     * @return

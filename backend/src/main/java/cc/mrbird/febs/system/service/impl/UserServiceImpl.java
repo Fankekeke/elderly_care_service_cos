@@ -171,7 +171,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional
-    public void regist(String username, String password, String name) throws Exception {
+    public void regist(String username, String password, String name, String email) throws Exception {
         User user = new User();
         user.setUserType(2);
         user.setPassword(MD5Util.encrypt(username, password));
@@ -189,6 +189,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         staffInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         staffInfo.setCode("STF-" + System.currentTimeMillis());
         staffInfo.setSex("1");
+        staffInfo.setMail(email);
+        staffInfo.setStatus("0");
         staffInfoService.save(staffInfo);
 
         UserRole ur = new UserRole();

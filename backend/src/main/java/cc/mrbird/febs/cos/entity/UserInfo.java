@@ -74,6 +74,8 @@ public class UserInfo implements Serializable {
     private String idCard;
     private String contract;
 
+    private String email;
+
     @TableField(exist = false)
     private Integer focusNum;
 

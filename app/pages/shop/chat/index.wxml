@@ -1,0 +1,57 @@
+<!-- 状态栏区域 -->
+<view class="cu-custom" style="height:{{CustomBar}}px;">
+    <view class="cu-bar fixed none-bg text-white bg-img" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+        <navigator class='action canui-head-title' open-type="navigateBack" hover-class="none">
+            <text class='icon-back'></text>
+            青龙帮
+        </navigator>
+    </view>
+</view>
+
+<view class="box" style="top: {{CustomBar}}px;">
+    <!-- 聊天记录区域 -->
+    <view class="chat-container">
+        <scroll-view class="chat-messages" scroll-y="true" scroll-with-animation="true" scrollTop="{{scrollTop}}">
+            <block wx:for="{{messages}}" wx:key="id">
+                <!-- 系统消息 -->
+                <view wx:if="{{item.type === 'system'}}" class="message system-message">
+                    <view class="message-content">
+                        <text class="welcome-text">{{item.content}}</text>
+                    </view>
+                </view>
+
+                <!-- 用户消息 -->
+                <view wx:elif="{{item.type === 'user'}}" class="message user-message">
+                    <view class="message-content">
+                        <text>{{item.content}}</text>
+                    </view>
+                    <view class="avatar user-avatar">我</view>
+                </view>
+
+                <!-- AI消息 -->
+                <view wx:elif="{{item.type === 'ai'}}" class="message ai-message">
+                    <view class="avatar ai-avatar">龙</view>
+                    <view class="message-content">
+                        <text>{{item.content}}</text>
+                    </view>
+                </view>
+            </block>
+        </scroll-view>
+
+        <!-- 输入区域 -->
+        <view class="input-container">
+            <view class="input-wrapper">
+                <input
+                        class="message-input"
+                        placeholder="请输入消息..."
+                        value="{{inputValue}}"
+                        bindinput="onInput"
+                        bindconfirm="sendMessage"
+                />
+                <button class="send-button" bindtap="sendMessage">
+                    <text class="icon-send"></text>
+                </button>
+            </view>
+        </view>
+    </view>
+</view>

@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 会员管理
+ * 志愿者管理
  *
  * @author FanK
  */
@@ -29,7 +29,7 @@ public class StaffInfo implements Serializable {
     private Integer id;
 
     /**
-     * 会员编号
+     * 志愿者编号
      */
     private String code;
 
@@ -110,7 +110,7 @@ public class StaffInfo implements Serializable {
     private Integer userId;
 
     /**
-     * 所属会员
+     * 所属志愿者
      */
     private Integer enterpriseId;
 
@@ -120,6 +120,11 @@ public class StaffInfo implements Serializable {
     private Integer positionId;
 
     private BigDecimal integral;
+
+    /**
+     * 状态（0.未审核 1.通过 2.驳回）
+     */
+    private String status;
 
     @TableField(exist = false)
     private String levelName;

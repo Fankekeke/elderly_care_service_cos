@@ -12,6 +12,13 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.dashscope.aigc.generation.Generation;
+import com.alibaba.dashscope.aigc.generation.GenerationParam;
+import com.alibaba.dashscope.aigc.generation.GenerationResult;
+import com.alibaba.dashscope.common.Message;
+import com.alibaba.dashscope.common.Role;
+import com.alibaba.dashscope.exception.InputRequiredException;
+import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +31,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,6 +78,9 @@ public class WebController {
     private final IServiceReserveInfoService serviceReserveInfoService;
 
     private final IAlertInfoService alertInfoService;
+
+    @Resource
+    private Generation generation;
 
     @PostMapping("/userAdd")
     public R userAdd(@RequestBody UserInfo user) throws Exception {
@@ -605,8 +618,80 @@ public class WebController {
     @PostMapping("/addWeight")
     public R addWeight(@RequestBody WeightRecordInfo weightRecordInfo) {
         weightRecordInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        return R.ok(weightRecordInfoService.save(weightRecordInfo));
+        weightRecordInfoService.save(weightRecordInfo);
+        String analysisPrompt = buildAnalysisPrompt(weightRecordInfo);
+        // 设置AI分析结果
+        queryContent(analysisPrompt, weightRecordInfo.getId());
+        return R.ok(true);
     }
+
+    /**
+     * 构建AI分析提示词
+     */
+
+    private String buildAnalysisPrompt(WeightRecordInfo weightRecordInfo) {
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("请分析以下老年人提交的身体健康信息：\n\n");
+        prompt.append("饮水量：").append(weightRecordInfo.getWaterAmount() + "毫升").append("\n");
+        prompt.append("健康情况：").append(weightRecordInfo.getSportName()).append("\n");
+        prompt.append("身体异常：").append(weightRecordInfo.getContent()).append("\n");
+        prompt.append("体重：").append(weightRecordInfo.getWeight() + "千克").append("\n");
+        // 分析要求
+        prompt.append("\n请从以下几个方面进行详细分析：\n");
+        prompt.append("1. **健康状况评估** - 综合各项指标评估当前健康状态（良好/一般/较差），并说明依据。\n");
+        prompt.append("2. **风险等级判定** - 判断是否存在潜在健康风险（低/中/高），并给出具体原因。\n");
+        prompt.append("3. **个性化建议** - 提供饮食、运动、作息等方面的改善建议，特别关注老年人常见问题（如骨质疏松、心血管疾病等）。\n");
+        prompt.append("4. **心理状态分析** - 结合身体异常描述，初步评估心理健康状况，并提供情绪调节建议。\n");
+        prompt.append("5. **紧急情况处理** - 若存在高风险项，请提供应急处理方案及就医建议。\n");
+
+        // 输出格式要求
+        prompt.append("\n请使用结构化方式输出分析结果，包含以下部分：\n");
+        prompt.append("- 【健康评估】\n");
+        prompt.append("- 【风险等级】\n");
+        prompt.append("- 【改善建议】\n");
+        prompt.append("- 【心理支持】\n");
+        prompt.append("- 【紧急预案】\n");
+
+        prompt.append("\n要求内容详实、语言通俗易懂，总字数控制在500-800字之间。");
+        return prompt.toString();
+    }
+
+    @Async("aiAnalysisExecutor")
+    public void queryContent(String key, Integer id) {
+        Message userMessage = Message.builder()
+                .role(Role.USER.getValue())
+                .content(key)
+                .build();
+        GenerationParam param = GenerationParam.builder()
+                //指定用于对话的通义千问模型名
+                .model("qwen-plus")
+                .messages(Arrays.asList(userMessage))
+                //
+                .resultFormat(GenerationParam.ResultFormat.MESSAGE)
+                //生成过程中核采样方法概率阈值，例如，取值为0.8时，仅保留概率加起来大于等于0.8的最可能token的最小集合作为候选集。
+                // 取值范围为（0,1.0)，取值越大，生成的随机性越高；取值越低，生成的确定性越高。
+                .topP(0.8)
+                //阿里云控制台DASHSCOPE获取的api-key
+                .apiKey("sk-fkebb4821588054a66aa1951d7f239f77c")
+                //启用互联网搜索，模型会将搜索结果作为文本生成过程中的参考信息，但模型会基于其内部逻辑“自行判断”是否使用互联网搜索结果。
+                .enableSearch(true)
+                .build();
+        GenerationResult generationResult = null;
+        try {
+            generationResult = generation.call(param);
+        } catch (NoApiKeyException | InputRequiredException e) {
+            throw new RuntimeException(e);
+        }
+        List<String> allContents = generationResult.getOutput().getChoices().stream()
+                .map(choice -> choice.getMessage().getContent())
+                .collect(Collectors.toList());
+        String content = String.join("\n---\n", allContents);
+
+        weightRecordInfoService.update(Wrappers.<WeightRecordInfo>lambdaUpdate()
+                .set(WeightRecordInfo::getAiRemark, content)
+                .eq(WeightRecordInfo::getId, id));
+    }
+
 
     @GetMapping("/deleteWeight")
     public R deleteWeight(Integer weightId) {
@@ -641,5 +726,55 @@ public class WebController {
         alertInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         alertInfo.setStatus("0");
         return R.ok(alertInfoService.save(alertInfo));
+    }
+
+    /**
+     * 获取天气信息
+     *
+     * @return 结果
+     */
+    @GetMapping("/queryWeather")
+    public R queryWeather() {
+        String url = "http://t.weather.itboy.net/api/weather/city/101270101";
+        String forecast = HttpUtil.get(url);
+        return R.ok(JSONUtil.parse(forecast));
+    }
+
+    /**
+     * 测试demo
+     *
+     * @param content 用书输入文本内容
+     */
+    @PostMapping(value = "aliTyqw")
+    public R send(@RequestBody String content) throws NoApiKeyException, InputRequiredException {
+        //用户与模型的对话历史。list中的每个元素形式为{“role”:角色, “content”: 内容}。
+        Message userMessage = Message.builder()
+                .role(Role.USER.getValue())
+                .content(content)
+                .build();
+
+        GenerationParam param = GenerationParam.builder()
+                //指定用于对话的通义千问模型名
+                .model("qwen-plus")
+                .messages(Arrays.asList(userMessage))
+                //
+                .resultFormat(GenerationParam.ResultFormat.MESSAGE)
+                //生成过程中核采样方法概率阈值，例如，取值为0.8时，仅保留概率加起来大于等于0.8的最可能token的最小集合作为候选集。
+                // 取值范围为（0,1.0)，取值越大，生成的随机性越高；取值越低，生成的确定性越高。
+                .topP(0.8)
+                //阿里云控制台DASHSCOPE获取的api-key
+                .apiKey("sk-fkebb4821588054a66aa1951d7f239f77c")
+                //启用互联网搜索，模型会将搜索结果作为文本生成过程中的参考信息，但模型会基于其内部逻辑“自行判断”是否使用互联网搜索结果。
+                .enableSearch(true)
+                .build();
+        GenerationResult generationResult = generation.call(param);
+//        String json = generationResult.getOutput().getChoices().get(0).getMessage().getContent();
+        // 获取所有 content 内容并放入 List 中
+        List<String> allContents = generationResult.getOutput().getChoices().stream()
+                .map(choice -> choice.getMessage().getContent())
+                .collect(Collectors.toList());
+
+        String combinedContent = String.join("\n---\n", allContents); // 使用 "---" 分隔多个回复内容
+        return R.ok(combinedContent);
     }
 }

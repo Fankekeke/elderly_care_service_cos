@@ -15,10 +15,10 @@ import java.util.List;
 public interface IStaffInfoService extends IService<StaffInfo> {
 
     /**
-     * 分页获取会员信息
+     * 分页获取志愿者信息
      *
      * @param page          分页对象
-     * @param staffInfo 会员信息
+     * @param staffInfo 志愿者信息
      * @return 结果
      */
     IPage<LinkedHashMap<String, Object>> selectStaffPage(Page<StaffInfo> page, StaffInfo staffInfo);
@@ -32,23 +32,23 @@ public interface IStaffInfoService extends IService<StaffInfo> {
     LinkedHashMap<String, Object> selectBulletinDetail(Integer userId);
 
     /**
-     * 查询会员信息
+     * 查询志愿者信息
      *
-     * @param enterpriseId 会员id
+     * @param enterpriseId 志愿者id
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectStaffList(Integer enterpriseId);
 
     /**
-     * 获取会员列表
+     * 获取志愿者列表
      *
-     * @param enterpriseId 会员ID
+     * @param enterpriseId 志愿者ID
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> queryStaffListByStaff(Integer enterpriseId, Integer userId);
 
     /**
-     * 根据用户id查询会员信息
+     * 根据用户id查询志愿者信息
      *
      * @param userId 用户id
      * @return 结果
@@ -56,7 +56,7 @@ public interface IStaffInfoService extends IService<StaffInfo> {
     LinkedHashMap<String, Object> queryStaffByUserId(Integer userId);
 
     /**
-     * 查询会员信息
+     * 查询志愿者信息
      *
      * @param ids ids
      * @return 结果

@@ -71,6 +71,11 @@ public class WeightRecordInfo implements Serializable {
      */
     private String images;
 
+    /**
+     * AI识别结果
+     */
+    private String aiRemark;
+
     @TableField(exist = false)
     private String userName;
 

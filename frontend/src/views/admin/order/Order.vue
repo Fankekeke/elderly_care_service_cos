@@ -67,7 +67,12 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon type="file-search" @click="orderViewOpen(record)" title="详 情" style="margin-right: 10px"></a-icon>
-<!--          <a-icon v-if="record.status ==  0" type="alipay" @click="orderPay(record)" title="支 付" style="margin-left: 10px"></a-icon>-->
+          <a-icon
+            v-if="record.status == -1"
+            type="check-circle"
+            @click="openAuditModal(record)"
+            title="审 核"
+            style="margin-right: 10px; color: green;" />
 <!--          <a-icon v-if="record.status ==  2" type="shopping" theme="twoTone" twoToneColor="#4a9ff5" @click="orderReceive(record)" title="完 成" style="margin-left: 10px"></a-icon>-->
         </template>
       </a-table>
@@ -82,6 +87,17 @@
       @success="handlepharmacyAddSuccess"
       :pharmacyAddVisiable="pharmacyAdd.visiable">
     </order-add>
+    <!-- 审核模态框 -->
+    <a-modal
+      title="订单审核"
+      :visible="auditModal.visible"
+      @ok="handleAuditConfirm"
+      @cancel="handleAuditCancel"
+      okText="通 过"
+      cancelText="驳 回"
+    >
+      <p>是否通过该订单？</p>
+    </a-modal>
   </a-card>
 </template>
 
@@ -99,6 +115,10 @@ export default {
   data () {
     return {
       advanced: false,
+      auditModal: {
+        visible: false,
+        currentRecord: null // 当前正在审核的订单记录
+      },
       orderAdd: {
         visiable: false
       },
@@ -202,6 +222,10 @@ export default {
         dataIndex: 'status',
         customRender: (text, row, index) => {
           switch (text) {
+            case '-2':
+              return <a-tag color='red'>订单取消</a-tag>
+            case '-1':
+              return <a-tag color='grey'>等待审核</a-tag>
             case '0':
               return <a-tag color='red'>未支付</a-tag>
             case '1':
@@ -257,7 +281,29 @@ export default {
     this.fetch()
   },
   methods: {
+    openAuditModal(record) {
+      this.auditModal.currentRecord = record;
+      this.auditModal.visible = true;
+    },
 
+    handleAuditConfirm() {
+      const orderId = this.auditModal.currentRecord.id;
+      this.$get('/cos/service-reserve-info/auditReserve', { id: orderId, status: 1 }).then(() => {
+        this.$message.success('订单审核通过');
+        this.auditModal.visible = false;
+        this.search(); // 刷新表格数据
+      });
+    },
+
+
+    handleAuditCancel() {
+      const orderId = this.auditModal.currentRecord.id;
+      this.$get('/cos/service-reserve-info/auditReserve', { orderId, status: -2 }).then(() => {
+        this.$message.success('订单审核驳回');
+        this.auditModal.visible = false;
+        this.search(); // 刷新表格数据
+      });
+    },
     orderEvaluateOpen (row) {
       this.orderEvaluateView.data = row
       this.orderEvaluateView.visiable = true

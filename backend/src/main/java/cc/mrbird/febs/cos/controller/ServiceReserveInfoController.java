@@ -71,6 +71,18 @@ public class ServiceReserveInfoController {
     }
 
     /**
+     * 审核预约信息
+     *
+     * @param id      预约ID
+     * @param status  审核状态
+     * @return 结果
+     */
+    @GetMapping("/auditReserve")
+    public R auditReserve(Integer id, Integer status) {
+        return R.ok(serviceReserveInfoService.update(Wrappers.<ServiceReserveInfo>lambdaUpdate().set(ServiceReserveInfo::getStatus, status).eq(ServiceReserveInfo::getId, id)));
+    }
+
+    /**
      * 获取未接单的订单
      *
      * @return 结果

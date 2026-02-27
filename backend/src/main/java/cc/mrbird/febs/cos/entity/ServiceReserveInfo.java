@@ -72,7 +72,7 @@ public class ServiceReserveInfo implements Serializable {
     private BigDecimal latitude;
 
     /**
-     * 状态（0.未支付 1.未接单 2.已接单 3.已完成）
+     * 状态（-1.未审核 -2.审核未通过 0.未支付 1.未接单 2.已接单 3.已完成）
      */
     private String status;
 

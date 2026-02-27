@@ -711,7 +711,7 @@ public class WebController {
     @PostMapping("/addService")
     public R addService(@RequestBody ServiceReserveInfo serviceReserveInfo) {
         serviceReserveInfo.setCode("OR-" + System.currentTimeMillis());
-        serviceReserveInfo.setStatus("1");
+        serviceReserveInfo.setStatus("-1");
         serviceReserveInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         return R.ok(serviceReserveInfoService.save(serviceReserveInfo));
     }

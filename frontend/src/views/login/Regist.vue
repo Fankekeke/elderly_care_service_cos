@@ -162,7 +162,7 @@ export default {
             this.sendFlag = true
             this.$message.success('发送成功！')
           } else {
-            this.$message.warning('改邮箱地址已存在！')
+            this.$message.warning('该邮箱地址已存在！')
           }
           this.enterText = '发送'
         })

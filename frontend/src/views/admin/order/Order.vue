@@ -288,7 +288,7 @@ export default {
 
     handleAuditConfirm() {
       const orderId = this.auditModal.currentRecord.id;
-      this.$get('/cos/service-reserve-info/auditReserve', { id: orderId, status: 1 }).then(() => {
+      this.$get('/cos/service-reserve-info/auditReserve', { orderId: orderId, status: 1 }).then(() => {
         this.$message.success('订单审核通过');
         this.auditModal.visible = false;
         this.search(); // 刷新表格数据

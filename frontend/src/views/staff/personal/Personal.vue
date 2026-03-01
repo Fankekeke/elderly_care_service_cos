@@ -2,6 +2,12 @@
   <a-row :gutter="20">
     <a-col :span="6">
       <a-card :loading="loading" :bordered="false">
+        <div class="status-container">
+          <div class="status-label">审核状态</div>
+          <a-tag :color="getStatusColor(expertInfo && expertInfo.status)" class="status-tag">
+            {{ getStatusText(expertInfo && expertInfo.status) }}
+          </a-tag>
+        </div>
         <a-form :form="form" layout="vertical">
           <a-row :gutter="20">
             <a-col :span="12">
@@ -41,7 +47,13 @@
             <a-col :span="12">
               <a-form-item label='身份证号码' v-bind="formItemLayout">
                 <a-input v-decorator="[
-            'idCard'
+            'idCard',
+            {
+              rules: [
+                { required: true, message: '请输入身份证号码!' },
+                { validator: validateIdCard }
+              ]
+            }
             ]"/>
               </a-form-item>
             </a-col>
@@ -172,6 +184,71 @@ export default {
     this.getExpertInfo(this.currentUser.userId)
   },
   methods: {
+    // 身份证号码校验方法
+    validateIdCard(rule, value, callback) {
+      if (!value) {
+        callback();
+        return;
+      }
+
+      // 18位身份证号码正则表达式
+      const idCardRegex = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+
+      if (!idCardRegex.test(value)) {
+        callback(new Error('身份证号码格式不正确'));
+        return;
+      }
+
+      // 校验身份证最后一位校验码
+      if (!this.checkIdCardCode(value)) {
+        callback(new Error('身份证号码校验码不正确'));
+        return;
+      }
+
+      callback();
+    },
+
+    // 校验身份证校验码
+    checkIdCardCode(idCard) {
+      if (idCard.length !== 18) return false;
+
+      const weight = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+      const validate = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
+
+      let sum = 0;
+      for (let i = 0; i < 17; i++) {
+        sum += parseInt(idCard[i]) * weight[i];
+      }
+
+      const mod = sum % 11;
+      const validateCode = validate[mod];
+
+      return idCard[17].toUpperCase() === validateCode;
+    },
+    getStatusText (status) {
+      switch (status) {
+        case '0':
+          return '未审核'
+        case '1':
+          return '通过'
+        case '2':
+          return '驳回'
+        default:
+          return '未知状态'
+      }
+    },
+    getStatusColor (status) {
+      switch (status) {
+        case '0':
+          return 'orange' // 未审核用橙色
+        case '1':
+          return 'green' // 通过用绿色
+        case '2':
+          return 'red' // 驳回用红色
+        default:
+          return 'default'
+      }
+    },
     isDuringDate (beginDateStr, endDateStr, curDataStr) {
       let curDate = new Date(curDataStr)
       let beginDate = new Date(beginDateStr)
@@ -278,5 +355,47 @@ export default {
 </script>
 
 <style scoped>
+.status-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #1890ff;
+}
 
+.status-label {
+  font-weight: 500;
+  color: #595959;
+  margin-right: 12px;
+  font-size: 14px;
+}
+
+.status-tag {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 自定义状态颜色 */
+.status-tag[data-status="0"] {
+  background-color: #fff7e6;
+  border-color: #ffd591;
+  color: #fa8c16;
+}
+
+.status-tag[data-status="1"] {
+  background-color: #f6ffed;
+  border-color: #b7eb8f;
+  color: #52c41a;
+}
+
+.status-tag[data-status="2"] {
+  background-color: #fff1f0;
+  border-color: #ffa39e;
+  color: #f5222d;
+}
 </style>

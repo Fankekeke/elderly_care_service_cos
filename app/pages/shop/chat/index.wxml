@@ -3,7 +3,7 @@
     <view class="cu-bar fixed none-bg text-white bg-img" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
         <navigator class='action canui-head-title' open-type="navigateBack" hover-class="none">
             <text class='icon-back'></text>
-            青龙帮
+            社区智能客服
         </navigator>
     </view>
 </view>
@@ -30,7 +30,7 @@
 
                 <!-- AI消息 -->
                 <view wx:elif="{{item.type === 'ai'}}" class="message ai-message">
-                    <view class="avatar ai-avatar">龙</view>
+                    <view class="avatar ai-avatar">客</view>
                     <view class="message-content">
                         <text>{{item.content}}</text>
                     </view>

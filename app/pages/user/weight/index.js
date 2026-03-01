@@ -91,6 +91,7 @@ Page({
         } else {
           item.image = ''
         }
+        item.aiRemark = item.aiRemark || '';
         item.days = this.timeFormat(item.createDate)
       });
       this.setData({

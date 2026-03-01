@@ -24,12 +24,12 @@
                             <view class="text-xs text-right text-gray" style="font-size: 12px">
                                 <text>饮水量：{{ item.waterAmount }}ML</text>
                             </view>
-                            <view class="text-xs text-right text-gray" style="font-size: 11px">
-                                <text wx:if="{{ item.fuelType == 1 }}">燃油</text>
-                                <text wx:if="{{ item.fuelType == 2 }}">柴油</text>
-                                <text wx:if="{{ item.fuelType == 3 }}">油电混动</text>
-                                <text wx:if="{{ item.fuelType == 4 }}">电能</text>
-                            </view>
+<!--                            <view class="text-xs text-right text-gray" style="font-size: 11px">-->
+<!--                                <text wx:if="{{ item.fuelType == 1 }}">燃油</text>-->
+<!--                                <text wx:if="{{ item.fuelType == 2 }}">柴油</text>-->
+<!--                                <text wx:if="{{ item.fuelType == 3 }}">油电混动</text>-->
+<!--                                <text wx:if="{{ item.fuelType == 4 }}">电能</text>-->
+<!--                            </view>-->
                         </view>
                     </view>
                 </view>
@@ -38,6 +38,14 @@
                 <text class="text-right text-red canui-text-left" style="font-size: 12px">
                     {{ item.content != null ? item.content : '- -' }}
                 </text>
+            </view>
+            <view wx:if="{{ item.aiRemark }}" style="margin-top: 10px; padding: 10px; background-color: #f0f8ff; border-radius: 8px;">
+                <view style="font-size: 14px; color: #1E90FF; font-weight: bold; margin-bottom: 5px;">
+                    <text class="icon-notification"></text> AI健康建议
+                </view>
+                <view style="font-size: 12px; color: #333; line-height: 1.5;">
+                    {{ item.aiRemark }}
+                </view>
             </view>
             <view class="order-price-box" style="margin-top: 20px">
                 <text style="font-size: 12px">{{ item.days }}创建</text>

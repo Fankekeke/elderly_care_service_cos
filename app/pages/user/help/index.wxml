@@ -11,6 +11,8 @@
     <view class="canui-card-order margin-top">
         <view class="canui-order-item bg-white" wx:for="{{ orderList }}">
             <view class="head-title-box">
+                <view class="cu-tag sm bg-orange" style="font-size: 12px" wx:if="{{item.status == -1}}">待审核</view>
+                <view class="cu-tag sm bg-pink" style="font-size: 12px" wx:if="{{item.status == -2}}">审核未通过</view>
                 <view class="cu-tag sm bg-red" style="font-size: 12px" wx:if="{{item.status == 1}}">未接单</view>
                 <view class="cu-tag sm bg-blue" style="font-size: 12px" wx:if="{{item.status == 2}}">已接单</view>
                 <view class="cu-tag sm bg-green" style="font-size: 12px" wx:if="{{item.status == 3}}">已完成</view>

@@ -13,6 +13,8 @@
         autosize border="{{ false }}" />
     <van-field model:value="{{ phone }}" label="联系方式" type="textarea" placeholder="请输入联系方式" style="display: block;"
         autosize border="{{ false }}" />
+    <van-field model:value="{{ email }}" label="邮箱地址" type="textarea" placeholder="请输入邮箱地址" style="display: block;"
+               autosize border="{{ false }}" />
     <van-field model:value="{{ age }}" label="年龄" type="textarea" placeholder="请输入年龄" style="display: block;" autosize
         border="{{ false }}" />
     <van-field model:value="{{ idCard }}" label="身份证号码" type="textarea" placeholder="请输入身份证号码" style="display: block;"

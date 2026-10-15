@@ -1,17 +1,17 @@
-### 基于SpringBoot + Vue的智慧互助养老服务平台.
+![](https://img.shields.io/badge/License-MIT-blue.svg)
 
-智慧互助养老平台、社区养老互助系统、居家养老服务平台
+![](https://img.shields.io/badge/Version-1.0.0-brightgreen.svg)
 
-###### 管理员：
-用户管理、公告管理、社区交流、敏感词管理、模块管理、消息回复内容管理、社区新闻、留言板信息、首页图片管理、报警处理、帮助服务信息、积分物品上架、志愿者积分兑换、健康记录、健身养生课程。
+![](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-###### 志愿者：
-账户注册、账户登录、个人信息、密码修改、积分物品兑换、我的兑换记录、我的接单、服务看板。
+# 基于 SpringBoot + Vue 的智慧互助养老服务平台 (Mutual-Aid Elderly Care Service Platform)
 
-###### 用户：
-小程序账户注册登录、个人信息修改、社区交流、我的贴子、发布贴子、健康记录、健康养生观看、发布报警信息、发布服务内容、消息内容回复。
+时间银行 · 互助服务 · 志愿积分 · 社区交流 · 健康记录 · 紧急报警 · 养生课程 · 消息互动
+
+本项目是一套面向社区互助养老场景的智慧服务平台，采用前后端分离架构，覆盖管理员、志愿者、用户（老年人/家属）三类角色。系统围绕"互助服务匹配、时间银行积分激励、社区交流互动、健康记录管理、紧急报警响应、健身养生课程"等核心业务设计，支持用户通过小程序发布服务需求与报警信息、参与社区交流、记录健康数据，志愿者接单提供上门服务并积累积分兑换物品，管理员完成平台内容管理、报警处理、积分商城运营与社区生态维护，适用于社区居家互助养老、邻里守望帮扶、时间银行志愿服务、老年健康监护等场景。
 
 #### 安装环境
+️**注意**：请确保您的开发环境已安装以下依赖。
 
 JAVA 环境 
 
@@ -19,24 +19,159 @@ Node.js环境 [https://nodejs.org/en/] 选择14.17
 
 Yarn 打开cmd， 输入npm install -g yarn !!!必须安装完毕nodejs
 
-Mysql 数据库 [https://blog.csdn.net/qq_40303031/article/details/88935262] 一定要把账户和密码记住
+Mysql 数据库 一定要把账户和密码记住
 
 redis
 
-Idea 编译器 [https://blog.csdn.net/weixin_44505194/article/details/104452880]
+Idea 编译器
 
-WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
+WebStorm OR VScode 编译器
 
 #### 采用技术及功能
 
 后端：SpringBoot、MybatisPlus、MySQL、Redis、
 前端：Vue、Apex、Antd、Axios
 
-平台前端：vue(框架) + vuex(全局缓存) + rue-router(路由) + axios(请求插件) + apex(图表)  + antd-ui(ui组件)
+平台前端：vue(框架) + vuex(全局缓存) + rue-router(路由) + axios(请求插件) + apex(图表)  + antd-ui(ui组件) + 百度地图 API
 
 平台后台：springboot(框架) + redis(缓存中间件) + shiro(权限中间件) + mybatisplus(orm) + restful风格接口 + mysql(数据库)
 
 开发环境：windows10 or windows7 ， vscode or webstorm ， idea + lambok
+
+---
+
+## 核心特性
+
+- **三角色协同运营**：区分管理员、志愿者、用户三类角色，支持互助服务供需精准对接与全流程闭环管理。
+- **时间银行积分机制**：志愿服务时长自动折算积分存入个人"爱心账户"，积分可兑换实物商品或他人提供的服务，实现"付出可留存、善意可兑换、互助可传承"。
+- **互助服务智能匹配**：用户发布服务需求后，系统基于地理位置与服务类型智能推荐附近志愿者，支持就近优先派单。
+- **紧急报警响应**：用户一键发布报警信息，平台同步推送至管理员与就近志愿者，联动定位与健康档案，快速响应紧急求助。
+- **健康记录管理**：支持用户记录血压、血糖、心率等健康指标，自动生成趋势图表，异常数据触发预警提醒。
+- **社区交流互动**：提供社区论坛、帖子发布与回复功能，促进老年人之间的情感交流与信息共享。
+- **健身养生课程**：管理员发布健康养生课程与内容，用户在线观看学习，丰富精神文化生活。
+- **敏感词与内容审核**：支持敏感词过滤与消息回复内容管理，保障社区交流环境健康有序。
+- **积分商城运营**：管理员上架积分兑换物品，志愿者使用积分兑换商品，兑换记录全程可追溯。
+- **模块化内容管理**：支持公告、社区新闻、首页图片、帮助服务信息等模块的灵活配置与发布。
+---
+
+## 适用场景
+
+- 社区居家互助养老服务
+- 邻里守望与低龄助高龄帮扶
+- 时间银行志愿服务积分管理
+- 老年人紧急报警与安全守护
+- 老年社区论坛与情感交流
+- 健身养生知识普及与课程学习
+- 社区养老资源整合与调度
+- 养老政策宣传与活动组织
+---
+
+## 功能模块概览
+
+### 管理员端
+
+管理员端负责平台整体运营、内容管理、报警处理、积分商城与社区生态维护：
+
+**系统基础管理**
+
+- **用户管理**：管理注册用户账号、实名认证状态、紧急联系人信息与账户状态。
+- **公告管理**：发布平台公告、活动通知、政策更新与系统维护信息。
+- **模块管理**：管理平台功能模块的启用/禁用状态，配置模块显示顺序与权限。
+- **管理员管理**：管理后台管理员账号、角色分配与权限配置。
+- **敏感词管理**：配置社区交流敏感词库，自动过滤违规内容，保障交流环境健康。
+- **消息回复内容管理**：审核与管理用户之间的消息回复内容，处理违规留言与投诉。
+
+**社区与内容管理**
+
+- **社区交流**：查看社区帖子列表，管理帖子审核、置顶、加精与删除操作。
+- **社区新闻**：发布与管理社区新闻、养老政策解读、活动报道等内容。
+- **留言板信息**：查看与回复用户留言板留言，处理用户反馈与建议。
+- **首页图片管理**：配置首页轮播图、Banner广告图与推荐内容图片。
+- **帮助服务信息**：维护平台使用帮助、常见问题解答与服务指南。
+
+**报警与安全管理**
+
+- **报警处理**：接收用户发布的紧急报警信息，查看报警位置与健康档案，调度志愿者或通知紧急联系人，记录处理结果。
+
+**积分商城管理**
+
+- **积分物品上架**：管理积分兑换商品，包括商品名称、图片、所需积分、库存与上下架状态。
+- **志愿者积分兑换**：审核志愿者积分兑换申请，处理兑换订单与发货记录。
+
+**健康与课程管理**
+
+- **健康记录**：查看用户健康数据记录，分析健康趋势，对异常数据进行预警标记。
+- **健身养生课程**：发布与管理健身养生课程，包括课程标题、内容、视频链接与分类标签。
+
+**数据统计**
+
+- **数据统计**：展示平台注册用户数、活跃志愿者数、累计服务订单数、积分兑换量等核心指标。
+
+### 志愿者端
+
+志愿者端面向社区志愿者，提供接单服务、积分管理与兑换功能：
+
+**账户与个人信息**
+
+- **账户注册**：志愿者填写个人信息、服务技能、可服务时间与所属社区完成注册。
+- **账户登录**：支持手机号登录，密码加密存储。
+- **个人信息**：维护姓名、联系方式、服务区域、擅长技能与个人简介。
+- **密码修改**：支持在线修改登录密码，保障账户安全。
+
+**服务与积分管理**
+
+- **我的接单**：查看可接服务订单列表，接受用户发布的服务需求，记录服务时长与完成情况。
+- **服务看板**：展示个人累计服务时长、获得积分、已完成订单数与服务评价。
+- **积分物品兑换**：浏览积分商城商品，使用个人积分兑换生活用品或服务权益。
+- **我的兑换记录**：查看历史兑换记录，包括兑换商品、消耗积分、兑换时间与物流状态。
+
+### 用户端（老年人/家属）
+
+用户端面向老年人及其家属，通过微信小程序提供便捷的服务发布、社区交流与健康管理功能：
+
+**账户与个人信息**
+
+- **小程序账户注册登录**：支持微信一键授权登录与手机号绑定注册。
+- **个人信息修改**：维护姓名、年龄、住址、紧急联系人、健康状况等个人资料。
+
+**服务与报警**
+
+- **发布服务内容**：发布生活照料、陪同就医、代买代办、聊天陪伴等服务需求，填写服务类型、期望时间与详细地址。
+- **发布报警信息**：紧急情况下点击一键报警，系统自动发送当前位置与健康档案摘要至平台与紧急联系人。
+
+**社区与健康**
+
+- **社区交流**：浏览社区帖子，参与话题讨论，与其他用户互动交流。
+- **我的贴子**：查看自己发布的帖子列表，管理帖子内容与回复。
+- **发布贴子**：在社区论坛发布帖子，分享生活经验、求助信息或活动心得。
+- **消息内容回复**：查看志愿者或管理员的消息回复，进行在线沟通。
+- **健康记录**：记录血压、血糖、心率、体重等健康指标，查看历史数据趋势图。
+- **健康养生观看**：浏览与观看管理员发布的健身养生课程视频，学习健康知识。
+
+---
+
+## 项目结构
+
+```text
+pharmacy-dispensing-system/
+├── backend/            # 后端 API 服务
+│   ├── src/
+│   │   ├── controllers/  # 控制器
+│   │   ├── models/       # 数据模型
+│   │   ├── routes/       # 路由
+│   │   └── services/     # 业务逻辑
+│   └── package.json
+├── frontend/           # 前端 Web 应用
+│   ├── src/
+│   │   ├── views/      # 页面视图
+│   │   ├── components/ # 公共组件
+│   │   └── store/      # 状态管理
+│   └── package.json
+├── docs/               # 项目文档与 API 接口说明
+├── LICENSE
+└── README.md
+```
+---
 
 
 #### 前台启动方式
@@ -46,35 +181,28 @@ WebStorm OR VScode 编译器 [https://www.jianshu.com/p/d63b5bae9dff]
 #### 默认后台账户密码
 [管理员]
 admin
-1234qwer
+123456
 
-[志愿者]
-fkkk
-1234qwer
-
-[用户]
-微信登录注册
+[员工]
+fank
+123456
 
 #### 项目截图
-暂无
-
 |  |  |
 |---------------------|---------------------|
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/b1bdf7c4-6c3b-4691-a679-b71f6afa2ca3.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/66c89817-3c7b-4157-bd08-f04a5af93f9a.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/afe5bf62-cd34-4d03-945a-fe884e4beadd.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/61dc940f-b7eb-4dfd-8a3f-95cb74241ff8.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/15961156-7f9c-4cbe-9b73-79584d1958b3.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/25dabc3f-144b-4296-ae53-e08ab6d2db23.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/c3e47bb5-a502-4e52-aabc-9d7085414ab9.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/dd9c095e-5221-474d-a559-b67a6d48169a.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/f7c45165-aa33-49d2-980e-e85a060b0f8b.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/db4baa3f-b87b-493b-878c-317afaa45874.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/ee107209-b7b3-4458-934f-b4ba09d900e2.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1d0326bb-7067-4dbc-9b90-f2a080592d90.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/2ab6ce7e-c9ee-420f-a90f-b9c758b2467e.png) |  |
+| ![](./assets/image%20(1).png) | ![](./assets/image%20(2).png) |
+| ![](./assets/image%20(3).png) | ![](./assets/image%20(4).png) |
+| ![](./assets/image%20(5).png) | ![](./assets/image%20(6).png) |
+| ![](./assets/image%20(7).png) | ![](./assets/image%20(8).png) |
+| ![](./assets/image%20(9).png) | ![](./assets/image%20(10).png) |
+| ![](./assets/image%20(11).png) | ![](./assets/image%20(12).png) |
+| ![](./assets/image%20(13).png) | |
 
-|  |  |
-|---------------------|---------------------|
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/10c58a27-df59-4cd1-ba88-cf0c4d078624.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/2ecb2ca5-c753-4e06-babc-b044539d5c98.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/9e27bfc5-70c3-4e20-9106-bd57719506c2.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/1b8914cd-8f68-4fcd-aa32-5a3a245a4c88.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/7f865e86-86b8-426b-8382-ddca7605c2fa.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/fd1696fc-b26a-4bd2-a370-fbb5fb45c36d.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/7c496848-0a06-4b2a-9887-8ffe6dff63e8.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/da8d73d2-b47f-487d-9ef7-2b993733d5c5.png) |
-| ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/3d3dc80a-2bae-4130-979b-c4ee9fce1a61.png) | ![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/bbe48ae1-cc2b-4c77-9b50-14fa6bcee3e3.png) |
+| ![](./assets/app_image%20(1).png) | ![](./assets/app_image%20(2).png) |
+| ![](./assets/app_image%20(3).png) | ![](./assets/app_image%20(4).png) |
+| ![](./assets/app_image%20(5).png) | ![](./assets/app_image%20(6).png) |
+| ![](./assets/app_image%20(7).png) | ![](./assets/app_image%20(8).png) |
+| ![](./assets/app_image%20(9).png) | ![](./assets/app_image%20(10).png) |
 
 #### 演示视频
 
@@ -92,9 +220,10 @@ WeChat: `Storm_Berserker`
 
 > 项目部署调试不好包退！功能逻辑没讲明白包退！
 
-![](https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/work/936e9baf53eb9a217af4f89c616dc19.png)
+<div align=center><img align="center" src="./assets/product_word.png" alt="fankekeke" /></div>
 
 #### 其它资源
+[2026年-答辩顺利通过-客户评价🀄](https://berserker287.github.io/2026/06/29/2026%E5%B9%B4%E7%AD%94%E8%BE%A9%E9%A1%BA%E5%88%A9%E9%80%9A%E8%BF%87/)
 
 [2025年-答辩顺利通过-客户评价🍜](https://berserker287.github.io/2025/06/18/2025%E5%B9%B4%E7%AD%94%E8%BE%A9%E9%A1%BA%E5%88%A9%E9%80%9A%E8%BF%87/)
 
@@ -118,4 +247,8 @@ WeChat: `Storm_Berserker`
 
 More info: [悲伤的橘子树](https://berserker287.github.io/)
 
-<p><img align="center" src="https://fank-bucket-oss.oss-cn-beijing.aliyuncs.com/img/%E5%90%88%E4%BD%9C%E7%89%A9%E6%96%99%E6%A0%B7%E5%BC%8F%20(3).png" alt="fankekeke" /></p>
+<div align="center"><img align="center" src="./assets/chat_qr_code.png" alt="fankekeke" width=250 /></div>
+
+<p><img align="center" src="./assets/wechat_group.png" alt="fankekeke" /></p>
+
+**感谢查看**
